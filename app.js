@@ -86,7 +86,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 /* Health Check */
 app.get('/version', (req, res) => {
-  res.status(200).json({ message: config.VERSION });
+  res.status(200).json({ version: config.VERSION });
 });
 
 /* Static Image Folder */
