@@ -1,6 +1,6 @@
 require('dotenv').config();
+const { validationResult } = require('express-validator');
 
-const Employee = require('../model/employee');
 const History = require('../model/history');
 const HttpError = require('../model/http-error');
 const LOG = require('../utils/logger');
@@ -82,12 +82,43 @@ const clockOut = async (req, res, next) => {
   res.status(201).json({ message: 'Clocked out successfully' });
 };
 
-const autoClockIn = (req, res, next) => {
+const autoClockIn = async (req, res, next) => {
   // TODO
+};
+
+const getMonthlyHistory = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data', 422)
+    );
+  }
+
+  const { employeeId } = req.employeeData;
+  const { time } = req.body;
+
+  let records;
+  try {
+    records = await History.find(
+      {
+        date: new RegExp(time),
+        employee: employeeId,
+      },
+      '-employee'
+    );
+  } catch (err) {
+    LOG.error(req._id, err.message);
+    return next(
+      new HttpError('Could not get history, please try again later', 500)
+    );
+  }
+
+  res.status(200).json({ records });
 };
 
 module.exports = {
   clockIn,
   clockOut,
   autoClockIn,
+  getMonthlyHistory,
 };

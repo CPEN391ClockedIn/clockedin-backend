@@ -1,9 +1,27 @@
 const express = require('express');
+const { check } = require('express-validator');
 
-const { recordTemperature } = require('../controller/temperature-controller');
+const checkAuth = require('../middleware/check-auth');
+
+const {
+  recordTemperature,
+  getMonthlyTemperature,
+} = require('../controller/temperature-controller');
 
 const temperatureRouter = express.Router();
 
-temperatureRouter.post('/record', recordTemperature);
+temperatureRouter.post(
+  '/record',
+  [check('employeeId').notEmpty(), check('temperature').notEmpty()],
+  recordTemperature
+);
+
+temperatureRouter.use(checkAuth);
+
+temperatureRouter.get(
+  '/monthly',
+  [check('time').matches(/^\d{4}-(0[1-9]|1[012])$/)],
+  getMonthlyTemperature
+);
 
 module.exports = temperatureRouter;
