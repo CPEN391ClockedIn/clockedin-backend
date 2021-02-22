@@ -43,7 +43,7 @@ mongoose
   .then(() => {
     LOG.info('✅connected to MongoDB');
   })
-  .catch(error => {
+  .catch((error) => {
     LOG.error('❌error connecting to MongoDB:', error.message);
   });
 mongoose.set('useCreateIndex', true);
