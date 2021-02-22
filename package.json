@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "CPEN 391 Project Backend",
   "main": "index.js",
   "scripts": {
