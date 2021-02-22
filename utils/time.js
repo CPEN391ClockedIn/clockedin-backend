@@ -1,10 +1,8 @@
 /* Return current date in or YYYY-MM-DD format */
 const formattedDate = () => {
-  const time = new Date(
-    new Date().setTime(
-      new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000
-    )
-  );
+  const time = new Date().toLocaleString(new Date(), {
+    timeZone: 'America/Vancouver',
+  });
   const year = time.getFullYear();
   const month = formatWithZero((time.getMonth() + 1).toString());
   const day = formatWithZero(time.getDate().toString());
@@ -13,11 +11,9 @@ const formattedDate = () => {
 
 /* Return current date in hh:mm:ss format */
 const formattedTime = () => {
-  const time = new Date(
-    new Date().setTime(
-      new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000
-    )
-  );
+  const time = new Date().toLocaleString(new Date(), {
+    timeZone: 'America/Vancouver',
+  });
   const hour = formatWithZero(time.getHours().toString());
   const minute = formatWithZero(time.getMinutes().toString());
   const second = formatWithZero(time.getSeconds().toString());
