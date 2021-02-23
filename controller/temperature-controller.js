@@ -116,7 +116,35 @@ const getMonthlyTemperature = async (req, res, next) => {
   res.status(200).json({ records });
 };
 
+const getTodayTemperature = async (req, res, next) => {
+  const { employeeId } = req.employeeData;
+
+  const time = formattedDate();
+
+  let record;
+  try {
+    record = await Temperature.find(
+      {
+        date: time,
+        employee: employeeId,
+      },
+      '-employee'
+    );
+  } catch (err) {
+    LOG.error(req._id, err.message);
+    return next(
+      new HttpError(
+        'Could not get temperature records, please try again later',
+        500
+      )
+    );
+  }
+
+  res.status(200).json({ record });
+};
+
 module.exports = {
   recordTemperature,
   getMonthlyTemperature,
+  getTodayTemperature,
 };

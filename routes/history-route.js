@@ -5,6 +5,7 @@ const {
   clockIn,
   clockOut,
   getMonthlyHistory,
+  getDailyHistory,
 } = require('../controller/history-controller');
 const checkAuth = require('../middleware/check-auth');
 
@@ -20,6 +21,12 @@ historyRouter.get(
   '/monthly',
   [check('time').matches(/^\d{4}-(0[1-9]|1[012])$/)],
   getMonthlyHistory
+);
+
+historyRouter.get(
+  '/daily',
+  [check('time').matches(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)],
+  getDailyHistory
 );
 
 module.exports = historyRouter;

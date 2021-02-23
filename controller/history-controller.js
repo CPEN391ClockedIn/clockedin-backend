@@ -116,9 +116,40 @@ const getMonthlyHistory = async (req, res, next) => {
   res.status(200).json({ records });
 };
 
+const getDailyHistory = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data', 422)
+    );
+  }
+
+  const { employeeId } = req.employeeData;
+  const { time } = req.body;
+
+  let record;
+  try {
+    record = await History.find(
+      {
+        date: time,
+        employee: employeeId,
+      },
+      '-employee'
+    );
+  } catch (err) {
+    LOG.error(req._id, err.message);
+    return next(
+      new HttpError('Could not get history, please try again later', 500)
+    );
+  }
+
+  res.status(200).json({ record });
+};
+
 module.exports = {
   clockIn,
   clockOut,
   autoClockIn,
   getMonthlyHistory,
+  getDailyHistory,
 };
