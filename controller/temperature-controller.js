@@ -92,7 +92,7 @@ const getMonthlyTemperature = async (req, res, next) => {
   }
 
   const { employeeId } = req.employeeData;
-  const { time } = req.body;
+  const { time } = req.params;
 
   let records;
   try {

@@ -20,7 +20,7 @@ temperatureRouter.post(
 temperatureRouter.use(checkAuth);
 
 temperatureRouter.get(
-  '/monthly',
+  '/monthly/:time',
   [check('time').matches(/^\d{4}-(0[1-9]|1[012])$/)],
   getMonthlyTemperature
 );
