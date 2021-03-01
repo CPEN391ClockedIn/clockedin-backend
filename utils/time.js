@@ -56,4 +56,6 @@ const hour24 = (hour, range) => {
 module.exports = {
   formattedDate,
   formattedTime,
+  formatWithZero,
+  hour24,
 };
