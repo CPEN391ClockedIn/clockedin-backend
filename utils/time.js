@@ -1,4 +1,4 @@
-const formatWithZero = input => (input.length < 2 ? `0${input}` : input);
+const formatWithZero = (input) => (input.length < 2 ? `0${input}` : input);
 
 const hour24 = (hour, range) => {
   if (range === "AM") {
