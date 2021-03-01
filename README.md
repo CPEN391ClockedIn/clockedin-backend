@@ -1,9 +1,8 @@
-# Set-up
+# Clockedin Backend
 
-**Requirements**
+## Requirements
 
-- NodeJS 14
-- MongoDB 4
+NodeJS 14 & MongoDB 4
 
 Install
 
@@ -19,7 +18,7 @@ Copy environment variables (Optional now)
 cp .env.sample .env
 ```
 
-# Running
+## Running
 
 **npm**
 

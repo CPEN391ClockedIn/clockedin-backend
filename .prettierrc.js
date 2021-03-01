@@ -16,7 +16,7 @@ module.exports = {
         avoid: parentheses can be avoided when it is unnecessary, e.g. x => x
         always: always have parentheses
   */
-  arrowParens: "avoid",
+  arrowParens: "always",
   // Default width to change to a new line
   printWidth: 80,
   /*  Place the ending ">" of a JSX element
