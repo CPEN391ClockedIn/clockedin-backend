@@ -13,7 +13,7 @@ npm ci        # for merely running backend
 mongod        # mongo server running
 ```
 
-Copy environment variables
+Copy environment variables (Optional now)
 
 ```sh
 cp .env.sample .env
