@@ -4,5 +4,5 @@ services: mongodb
 cache:
   directories: backend/node_modules
 install: npm ci
-before_script: sleep 5
+before_script: sleep 3
 script: npm test
