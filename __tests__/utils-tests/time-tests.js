@@ -1,43 +1,9 @@
 const {
+  hour24,
+  formatWithZero,
   formattedDate,
   formattedTime,
-  formatWithZero,
-  hour24,
 } = require('../../utils/time');
-
-describe('Date and time format tests', () => {
-  it('should have correct date format', () => {
-    const time = new Date();
-    const year = time.getFullYear();
-    const month = ('0' + (time.getMonth() + 1)).slice(-2);
-    const day = time.getDate();
-    const expectedDate = `${year}-${month}-${day}`;
-    expect(formattedDate()).toEqual(expectedDate);
-  });
-
-  it('should have correct time format', () => {
-    const time = new Date();
-    const hour = ('0' + time.getHours()).slice(-2);
-    const minute = ('0' + time.getMinutes()).slice(-2);
-    const second = ('0' + time.getSeconds()).slice(-2);
-    const expectedTime = `${hour}:${minute}:${second}`;
-    expect(formattedTime()).toEqual(expectedTime);
-  });
-});
-
-describe('Fill zero format tests', () => {
-  it('should fill with zero for 1-digit input', () => {
-    const input = '1';
-    const expected = '01';
-    expect(formatWithZero(input)).toEqual(expected);
-  });
-
-  it('should not fill with zero for 2-digit input', () => {
-    const input = '20';
-    const expected = '20';
-    expect(formatWithZero(input)).toEqual(expected);
-  });
-});
 
 describe('12-hour to 24-hour conversion tests', () => {
   let hour, range, expectedConversion;
@@ -168,5 +134,60 @@ describe('12-hour to 24-hour conversion tests', () => {
     range = 'PM';
     expectedConversion = '23';
     expect(hour24(hour, range)).toEqual(expectedConversion);
+  });
+});
+
+describe('Fill zero format tests', () => {
+  it('should fill with zero for 1-digit input', () => {
+    const input = '1';
+    const expected = '01';
+    expect(formatWithZero(input)).toEqual(expected);
+  });
+
+  it('should not fill with zero for 2-digit input', () => {
+    const input = '20';
+    const expected = '20';
+    expect(formatWithZero(input)).toEqual(expected);
+  });
+});
+
+describe('Date and time format tests', () => {
+  it('should have correct date format', () => {
+    const dateTimeString = new Date().toLocaleString(new Date(), {
+      timeZone: 'America/Vancouver',
+    });
+    const indexOfComma = dateTimeString.indexOf(',');
+    const dateString = dateTimeString.slice(0, indexOfComma);
+    const date = dateString.split('/');
+
+    const year = date[2];
+    const month = ('0' + date[0]).slice(-2);
+    const day = ('0' + date[1]).slice(-2);
+    const expectedDate = `${year}-${month}-${day}`;
+    expect(formattedDate()).toEqual(expectedDate);
+  });
+
+  it('should have correct time format', () => {
+    const dateTimeString = new Date().toLocaleString(new Date(), {
+      timeZone: 'America/Vancouver',
+    });
+    const indexOfFirstSpace = dateTimeString.indexOf(' ');
+    const indexOfSecondSpace = dateTimeString.indexOf(
+      ' ',
+      indexOfFirstSpace + 1
+    );
+    const timeString = dateTimeString.slice(
+      indexOfFirstSpace + 1,
+      indexOfSecondSpace
+    );
+
+    console.log(timeString);
+
+    const time = timeString.split(':');
+    const hour = ('0' + hour24(time[0])).slice(-2);
+    const minute = ('0' + time[1]).slice(-2);
+    const second = ('0' + time[2]).slice(-2);
+    const expectedTime = `${hour}:${minute}:${second}`;
+    expect(formattedTime()).toEqual(expectedTime);
   });
 });
