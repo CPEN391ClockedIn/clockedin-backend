@@ -59,7 +59,7 @@ const recordTemperature = async (req, res, next) => {
     );
   }
 
-  if (!!previousRecord) {
+  if (previousRecord) {
     return res
       .status(201)
       .json({ message: 'Temperature updated successfully' });

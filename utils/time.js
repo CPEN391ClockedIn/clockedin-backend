@@ -1,13 +1,19 @@
-/* Return current date in or YYYY-MM-DD format */
-const formattedDate = () => {
-  const { year, month, day } = formatDateTime();
-  return `${year}-${month}-${day}`;
-};
+const formatWithZero = (input) => (input.length < 2 ? `0${input}` : input);
 
-/* Return current date in hh:mm:ss format */
-const formattedTime = () => {
-  const { hour, minute, second } = formatDateTime();
-  return `${hour}:${minute}:${second}`;
+const hour24 = (hour, range) => {
+  if (range === 'AM') {
+    if (hour === '12') {
+      return '0';
+    } else {
+      return hour;
+    }
+  } else {
+    if (hour === '12') {
+      return hour;
+    } else {
+      return (+hour + 12).toString();
+    }
+  }
 };
 
 const formatDateTime = () => {
@@ -35,22 +41,16 @@ const formatDateTime = () => {
   return { year, month, day, hour, minute, second };
 };
 
-const formatWithZero = (input) => (input.length < 2 ? `0${input}` : input);
+/* Return current date in or YYYY-MM-DD format */
+const formattedDate = () => {
+  const { year, month, day } = formatDateTime();
+  return `${year}-${month}-${day}`;
+};
 
-const hour24 = (hour, range) => {
-  if (range === 'AM') {
-    if (hour === '12') {
-      return '0';
-    } else {
-      return hour;
-    }
-  } else {
-    if (hour === '12') {
-      return hour;
-    } else {
-      return (+hour + 12).toString();
-    }
-  }
+/* Return current date in hh:mm:ss format */
+const formattedTime = () => {
+  const { hour, minute, second } = formatDateTime();
+  return `${hour}:${minute}:${second}`;
 };
 
 module.exports = {

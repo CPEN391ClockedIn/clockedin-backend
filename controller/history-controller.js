@@ -28,7 +28,7 @@ const clockIn = async (req, res, next) => {
     );
   }
 
-  if (!!clockInRecord) {
+  if (clockInRecord) {
     return next(
       new HttpError('Could not clock in twice on the same day!', 403)
     );
