@@ -1,0 +1,8 @@
+language: node_js
+node_js: 14
+services: mongodb
+cache:
+  directories: backend/node_modules
+install: npm ci
+before_script: sleep 5
+script: npm test
