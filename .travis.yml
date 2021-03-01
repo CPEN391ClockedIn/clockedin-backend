@@ -6,14 +6,3 @@ cache:
 install: npm ci
 before_script: sleep 5
 script: npm test
-
-
-
-
-  "eslintConfig": {
-    "rules": {
-      "quotes": ["error", "single"],
-      "no-console": "off",
-      "new-cap": "off"
-    }
-  }
