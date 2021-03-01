@@ -1,0 +1,4 @@
+rules:
+  quotes: ['error', 'single']
+  no-console: off
+  new-cap: off

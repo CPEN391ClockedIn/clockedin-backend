@@ -171,6 +171,7 @@ describe('Date and time format tests', () => {
     const dateTimeString = new Date().toLocaleString(new Date(), {
       timeZone: 'America/Vancouver',
     });
+
     const indexOfFirstSpace = dateTimeString.indexOf(' ');
     const indexOfSecondSpace = dateTimeString.indexOf(
       ' ',
@@ -180,11 +181,10 @@ describe('Date and time format tests', () => {
       indexOfFirstSpace + 1,
       indexOfSecondSpace
     );
-
-    console.log(timeString);
+    const range = dateTimeString.slice(indexOfSecondSpace + 1);
 
     const time = timeString.split(':');
-    const hour = ('0' + hour24(time[0])).slice(-2);
+    const hour = ('0' + hour24(time[0], range)).slice(-2);
     const minute = ('0' + time[1]).slice(-2);
     const second = ('0' + time[2]).slice(-2);
     const expectedTime = `${hour}:${minute}:${second}`;
