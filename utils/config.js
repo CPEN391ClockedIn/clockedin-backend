@@ -1,12 +1,12 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const { version } = require('../package.json');
+const { version } = require("../package.json");
 
-const LOG = require('./logger');
+const LOG = require("./logger");
 
 LOG.info(
   `🚀server startup time: ${new Date().toLocaleString(new Date(), {
-    timeZone: 'America/Vancouver',
+    timeZone: "America/Vancouver",
   })}`
 );
 LOG.info(`🌲environment:${process.env.NODE_ENV} version:${version}`);
@@ -14,13 +14,13 @@ LOG.info(`🌲environment:${process.env.NODE_ENV} version:${version}`);
 let PORT = process.env.PORT;
 let MONGODB_URI = process.env.MONGODB_URI;
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   PORT = process.env.DEV_PORT;
   MONGODB_URI = process.env.DEV_MONGODB_URI;
 }
 
-LOG.info('🔢PORT:', PORT);
-LOG.info('🔢MONGODB_URI:', MONGODB_URI);
+LOG.info("🔢PORT:", PORT);
+LOG.info("🔢MONGODB_URI:", MONGODB_URI);
 
 module.exports = {
   PORT,

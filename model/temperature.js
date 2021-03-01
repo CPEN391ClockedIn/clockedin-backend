@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const Schema = mongoose.Schema;
 
@@ -9,7 +9,7 @@ const temperatureSchema = new Schema(
     temperature: { type: Number, required: true },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Employee',
+      ref: "Employee",
       required: true,
     },
   },
@@ -18,7 +18,7 @@ const temperatureSchema = new Schema(
 
 temperatureSchema.plugin(uniqueValidator);
 
-temperatureSchema.set('toJSON', {
+temperatureSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -26,4 +26,4 @@ temperatureSchema.set('toJSON', {
   },
 });
 
-module.exports = mongoose.model('Temperature', temperatureSchema);
+module.exports = mongoose.model("Temperature", temperatureSchema);

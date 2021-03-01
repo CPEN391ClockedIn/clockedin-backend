@@ -1,17 +1,17 @@
-require('dotenv').config();
-const { validationResult } = require('express-validator');
+require("dotenv").config();
+const { validationResult } = require("express-validator");
 
-const Employee = require('../model/employee');
-const HttpError = require('../model/http-error');
-const Temperature = require('../model/temperature');
-const LOG = require('../utils/logger');
-const { formattedDate } = require('../utils/time');
+const Employee = require("../model/employee");
+const HttpError = require("../model/http-error");
+const Temperature = require("../model/temperature");
+const LOG = require("../utils/logger");
+const { formattedDate } = require("../utils/time");
 
 const recordTemperature = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data', 422)
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -25,7 +25,7 @@ const recordTemperature = async (req, res, next) => {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Failed to get the employee information, please try again later',
+        "Failed to get the employee information, please try again later",
         500
       )
     );
@@ -34,7 +34,7 @@ const recordTemperature = async (req, res, next) => {
   if (!employee) {
     return next(
       new HttpError(
-        'Employee not found, please check your input information',
+        "Employee not found, please check your input information",
         404
       )
     );
@@ -55,14 +55,14 @@ const recordTemperature = async (req, res, next) => {
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Could not save temperature, please try again later', 500)
+      new HttpError("Could not save temperature, please try again later", 500)
     );
   }
 
   if (previousRecord) {
     return res
       .status(201)
-      .json({ message: 'Temperature updated successfully' });
+      .json({ message: "Temperature updated successfully" });
   }
 
   const newTemperatureRecord = new Temperature({
@@ -76,18 +76,18 @@ const recordTemperature = async (req, res, next) => {
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Could not save temperature, please try again later', 500)
+      new HttpError("Could not save temperature, please try again later", 500)
     );
   }
 
-  res.status(201).json({ message: 'Temperature saved successfully' });
+  res.status(201).json({ message: "Temperature saved successfully" });
 };
 
 const getMonthlyTemperature = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data', 422)
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -101,13 +101,13 @@ const getMonthlyTemperature = async (req, res, next) => {
         date: new RegExp(time),
         employee: employeeId,
       },
-      '-employee'
+      "-employee"
     );
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not get temperature records, please try again later',
+        "Could not get temperature records, please try again later",
         500
       )
     );
@@ -128,13 +128,13 @@ const getTodayTemperature = async (req, res, next) => {
         date: time,
         employee: employeeId,
       },
-      '-employee'
+      "-employee"
     );
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not get temperature records, please try again later',
+        "Could not get temperature records, please try again later",
         500
       )
     );

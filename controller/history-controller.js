@@ -1,10 +1,10 @@
-require('dotenv').config();
-const { validationResult } = require('express-validator');
+require("dotenv").config();
+const { validationResult } = require("express-validator");
 
-const History = require('../model/history');
-const HttpError = require('../model/http-error');
-const LOG = require('../utils/logger');
-const { formattedDate, formattedTime } = require('../utils/time');
+const History = require("../model/history");
+const HttpError = require("../model/http-error");
+const LOG = require("../utils/logger");
+const { formattedDate, formattedTime } = require("../utils/time");
 
 const clockIn = async (req, res, next) => {
   const { employeeId } = req.employeeData;
@@ -22,7 +22,7 @@ const clockIn = async (req, res, next) => {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not save clock in information, please try again later',
+        "Could not save clock in information, please try again later",
         500
       )
     );
@@ -30,7 +30,7 @@ const clockIn = async (req, res, next) => {
 
   if (clockInRecord) {
     return next(
-      new HttpError('Could not clock in twice on the same day!', 403)
+      new HttpError("Could not clock in twice on the same day!", 403)
     );
   }
 
@@ -48,13 +48,13 @@ const clockIn = async (req, res, next) => {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not save clock in information, please try again later',
+        "Could not save clock in information, please try again later",
         500
       )
     );
   }
 
-  res.status(201).json({ message: 'Clocked in successfully' });
+  res.status(201).json({ message: "Clocked in successfully" });
 };
 
 const clockOut = async (req, res, next) => {
@@ -73,13 +73,13 @@ const clockOut = async (req, res, next) => {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not save clock out information, please try again later',
+        "Could not save clock out information, please try again later",
         500
       )
     );
   }
 
-  res.status(201).json({ message: 'Clocked out successfully' });
+  res.status(201).json({ message: "Clocked out successfully" });
 };
 
 const autoClockIn = async (req, res, next) => {
@@ -90,7 +90,7 @@ const getMonthlyHistory = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data', 422)
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -104,12 +104,12 @@ const getMonthlyHistory = async (req, res, next) => {
         date: new RegExp(time),
         employee: employeeId,
       },
-      '-employee'
+      "-employee"
     );
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Could not get history, please try again later', 500)
+      new HttpError("Could not get history, please try again later", 500)
     );
   }
 
@@ -120,7 +120,7 @@ const getDailyHistory = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data', 422)
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -134,12 +134,12 @@ const getDailyHistory = async (req, res, next) => {
         date: time,
         employee: employeeId,
       },
-      '-employee'
+      "-employee"
     );
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Could not get history, please try again later', 500)
+      new HttpError("Could not get history, please try again later", 500)
     );
   }
 

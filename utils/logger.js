@@ -1,9 +1,9 @@
 const info = (...params) => {
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV !== "test") {
     console.log(
-      'INFO',
-      `[${new Date().toLocaleString('en-CA', {
-        timeZone: 'America/Vancouver',
+      "INFO",
+      `[${new Date().toLocaleString("en-CA", {
+        timeZone: "America/Vancouver",
       })}]`,
       ...params
     );
@@ -11,11 +11,11 @@ const info = (...params) => {
 };
 
 const error = (...params) => {
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV !== "test") {
     console.error(
-      '❌ERROR',
-      `[${new Date().toLocaleString('en-CA', {
-        timeZone: 'America/Vancouver',
+      "❌ERROR",
+      `[${new Date().toLocaleString("en-CA", {
+        timeZone: "America/Vancouver",
       })}]`,
       ...params
     );

@@ -1,17 +1,17 @@
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const { validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
+require("dotenv").config();
+const bcrypt = require("bcrypt");
+const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 
-const Employee = require('../model/employee');
-const HttpError = require('../model/http-error');
-const LOG = require('../utils/logger');
+const Employee = require("../model/employee");
+const HttpError = require("../model/http-error");
+const LOG = require("../utils/logger");
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError('Invalid inputs passed, please check your data', 422)
+      new HttpError("Invalid inputs passed, please check your data", 422)
     );
   }
 
@@ -23,7 +23,7 @@ const signup = async (req, res, next) => {
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Could not create employee, please try again later', 500)
+      new HttpError("Could not create employee, please try again later", 500)
     );
   }
 
@@ -38,7 +38,7 @@ const signup = async (req, res, next) => {
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Employee exists already, please login instead', 422)
+      new HttpError("Employee exists already, please login instead", 422)
     );
   }
 
@@ -51,7 +51,7 @@ const signup = async (req, res, next) => {
     );
   } catch {
     return next(
-      new HttpError('Signing Up failed, please try again later', 500)
+      new HttpError("Signing Up failed, please try again later", 500)
     );
   }
 
@@ -65,7 +65,7 @@ const login = async (req, res, next) => {
 
   if (!email || !password) {
     return next(
-      new HttpError('Invalid credentials, could not log you in', 401)
+      new HttpError("Invalid credentials, could not log you in", 401)
     );
   }
 
@@ -75,13 +75,13 @@ const login = async (req, res, next) => {
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
-      new HttpError('Logging in failed, please try again later', 500)
+      new HttpError("Logging in failed, please try again later", 500)
     );
   }
 
   if (!existingEmployee) {
     return next(
-      new HttpError('Invalid credentials, could not log you in', 401)
+      new HttpError("Invalid credentials, could not log you in", 401)
     );
   }
 
@@ -92,7 +92,7 @@ const login = async (req, res, next) => {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Could not log you in, please check your credentials and try again',
+        "Could not log you in, please check your credentials and try again",
         500
       )
     );
@@ -100,7 +100,7 @@ const login = async (req, res, next) => {
 
   if (!isValidPassword) {
     return next(
-      new HttpError('Invalid credentials, could not log you in', 401)
+      new HttpError("Invalid credentials, could not log you in", 401)
     );
   }
 
@@ -109,10 +109,10 @@ const login = async (req, res, next) => {
     token = jwt.sign(
       { employeeId: existingEmployee.id, email: existingEmployee.email },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
   } catch {
-    return next(new HttpError('Logging Up failed, please try again', 500));
+    return next(new HttpError("Logging Up failed, please try again", 500));
   }
 
   res.json({
@@ -127,12 +127,12 @@ const getProfile = async (req, res, next) => {
 
   let employee;
   try {
-    employee = await Employee.findById(employeeId, '-password');
+    employee = await Employee.findById(employeeId, "-password");
   } catch (err) {
     LOG.error(req._id, err.message);
     return next(
       new HttpError(
-        'Failed to get the profile information, please try again later',
+        "Failed to get the profile information, please try again later",
         500
       )
     );
