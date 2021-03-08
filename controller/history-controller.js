@@ -63,8 +63,9 @@ const clockOut = async (req, res, next) => {
   const date = formattedDate();
   const clockOutTime = formattedTime();
 
+  let history;
   try {
-    await History.findOneAndUpdate(
+    history = await History.findOneAndUpdate(
       { date, employee: employeeId },
       { clockOutTime },
       { new: true }
@@ -76,6 +77,12 @@ const clockOut = async (req, res, next) => {
         "Could not save clock out information, please try again later",
         500
       )
+    );
+  }
+
+  if (!history) {
+    return next(
+      new HttpError("Clock out before clock in is not permitted!", 400)
     );
   }
 
