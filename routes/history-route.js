@@ -4,12 +4,21 @@ const { check } = require("express-validator");
 const {
   clockIn,
   clockOut,
+  autoClockIn,
   getMonthlyHistory,
   getDailyHistory,
 } = require("../controller/history-controller");
 const checkAuth = require("../middleware/check-auth");
+const fileUpload = require("../middleware/file-upload");
 
 const historyRouter = express.Router();
+
+historyRouter.post(
+  "/clockinauto",
+  fileUpload.single("loginImage"),
+  [check("temperature").notEmpty()],
+  autoClockIn
+);
 
 historyRouter.use(checkAuth);
 

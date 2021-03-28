@@ -7,12 +7,11 @@ const LOG = require("../utils/logger");
 
 AWS.config.loadFromPath(path.join("config.json"));
 const rekognition = new AWS.Rekognition();
+const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
 const uploadImage = async (req, res, next) => {
   const { employeeId } = req.params;
   const employeeImage = req.file;
-
-  const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
   const uploadParams = {
     Bucket: "clockedin",
