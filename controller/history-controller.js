@@ -5,6 +5,7 @@ const path = require("path");
 
 const History = require("../model/history");
 const HttpError = require("../model/http-error");
+const { handleAutoLogin } = require("../service/loginService");
 const LOG = require("../utils/logger");
 const { formattedDate, formattedTime } = require("../utils/time");
 
@@ -143,53 +144,14 @@ const autoClockIn = async (req, res, next) => {
         }
         if (data) {
           const employeeId = data.FaceMatches[0].Face.ExternalImageId;
-          
-          const date = formattedDate();
-
-          /* Check if the employee has clocked in */
-          let clockInRecord;
-          try {
-            clockInRecord = await History.findOne({
-              date,
-              employee: employeeId,
-            });
-          } catch (err) {
-            LOG.error(req._id, err.message);
-            return next(
-              new HttpError(
-                "Could not save clock in information, please try again later",
-                500
-              )
-            );
-          }
-        
-          if (clockInRecord) {
-            return next(
-              new HttpError("Could not clock in twice on the same day!", 403)
-            );
-          }
-          
-          const clockInTime = formattedTime();
-
-          const newClockInRecord = new History({
-            date,
-            clockInTime,
-            employee: employeeId,
+          handleAutoLogin(employeeId, temperature).then((data) => {
+            const { code, message } = data;
+            if (code === 201) {
+              return res.status(code).json({ message });
+            } else {
+              return next(new HttpError(message, code));
+            }
           });
-        
-          try {
-            await newClockInRecord.save();
-          } catch (err) {
-            LOG.error(req._id, err.message);
-            return next(
-              new HttpError(
-                "Could not save clock in information, please try again later",
-                500
-              )
-            );
-          }
-        
-          res.status(201).json({ message: "Clocked in successfully" });
         }
       });
     }
