@@ -12,6 +12,7 @@ const LOG = require("./utils/logger");
 const employeeRouter = require("./routes/employee-route");
 const temperatureRouter = require("./routes/temperature-route");
 const historyRouter = require("./routes/history-route");
+const imageRouter = require("./routes/image-route");
 
 /* App Setting */
 const app = express();
@@ -96,6 +97,7 @@ app.get("/version", (req, res) => {
 app.use("/api/employee", employeeRouter);
 app.use("/api/temperature", temperatureRouter);
 app.use("/api/history", historyRouter);
+app.use("/api/image", imageRouter);
 
 /* Error Handling */
 app.use((req, res, next) => {
