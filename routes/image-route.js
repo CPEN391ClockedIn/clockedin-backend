@@ -1,9 +1,11 @@
 const express = require("express");
 
-const { uploadImage } = require("../controller/image-controller");
+const { uploadImage, imageTest } = require("../controller/image-controller");
 const fileUpload = require("../middleware/file-upload");
 
 const imageRouter = express.Router();
+
+imageRouter.post("/test", fileUpload.single("testImage"), imageTest);
 
 imageRouter.post(
   "/:employeeId",
