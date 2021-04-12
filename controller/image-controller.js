@@ -1,5 +1,6 @@
 require("dotenv").config();
 const AWS = require("aws-sdk");
+const fs = require("fs");
 const path = require("path");
 
 const HttpError = require("../model/http-error");
@@ -62,15 +63,27 @@ const uploadImage = async (req, res, next) => {
 
 /* Testing Purpose Only */
 const imageTest = async (req, res, next) => {
-  const testImage = req.file;
-  const { testImageString } = req.body;
+  const { part, testImageString, end } = req.body;
 
-  console.log(req.body);
-  console.log(testImage);
-  console.log(testImageString);
+  console.log(part, testImageString, end);
 
-  if (!testImage) {
-    return next(new HttpError("Uploading failed, please try again later", 400));
+  fs.writeFileSync(`imagePart${part}.txt`, testImageString);
+
+  if (end) {
+    fs.writeFileSync(`image.txt`, "");
+
+    let index = 1;
+
+    while (fs.existsSync(`imagePart${index}.txt`)) {
+      const text = fs.readFileSync(`imagePart${index}.txt`).toString("utf-8");
+      fs.appendFileSync("image.txt", text);
+
+      index++;
+    }
+  }
+
+  if (!part || !testImageString) {
+    return next(new HttpError("Uploading failed, please try again", 400));
   }
 
   res.status(201).json({ message: "Image uploaded successfully" });
