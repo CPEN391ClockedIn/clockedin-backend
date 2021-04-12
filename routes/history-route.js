@@ -5,25 +5,27 @@ const {
   clockIn,
   clockOut,
   autoClockIn,
+  autoClockInTesting,
   getMonthlyHistory,
   getDailyHistory,
 } = require("../controller/history-controller");
 const checkAuth = require("../middleware/check-auth");
+const fileUpload = require("../middleware/file-upload");
 
 const historyRouter = express.Router();
-
-// historyRouter.post(
-//   "/clockinauto",
-//   fileUpload.single("loginImage"),
-//   [check("temperature").notEmpty()],
-//   autoClockIn
-// );
 
 historyRouter.post(
   "/clockinauto",
   [check("part").notEmpty()],
   [check("imageString").notEmpty()],
   autoClockIn
+);
+
+historyRouter.post(
+  "/clockinautotesting",
+  fileUpload.single("loginImage"),
+  [check("temperature").notEmpty()],
+  autoClockInTesting
 );
 
 historyRouter.use(checkAuth);

@@ -7,7 +7,10 @@ const path = require("path");
 
 const History = require("../model/history");
 const HttpError = require("../model/http-error");
-const { handleAutoLogin } = require("../service/loginService");
+const {
+  handleAutoLogin,
+  handleAutoLoginTesting,
+} = require("../service/loginService");
 const LOG = require("../utils/logger");
 const { formattedDate, formattedTime } = require("../utils/time");
 
@@ -182,67 +185,67 @@ const autoClockIn = async (req, res, next) => {
   }
 };
 
-// const autoClockIn = async (req, res, next) => {
-//   const loginImage = req.file;
-//   const { temperature } = req.body;
+const autoClockInTesting = async (req, res, next) => {
+  const loginImage = req.file;
+  const { temperature } = req.body;
 
-//   if (parseInt(temperature) > parseInt(process.env.TEMPERATURE_THRESHOLD)) {
-//     return next(
-//       new HttpError(
-//         "Your body temperature is higher than the company's safe temperature. Please contact your manager!",
-//         400
-//       )
-//     );
-//   }
+  if (parseInt(temperature) > parseInt(process.env.TEMPERATURE_THRESHOLD)) {
+    return next(
+      new HttpError(
+        "Your body temperature is higher than the company's safe temperature. Please contact your manager!",
+        400
+      )
+    );
+  }
 
-//   const uploadParams = {
-//     Bucket: "clockedin",
-//     Key: loginImage.originalname,
-//     Body: loginImage.buffer,
-//   };
+  const uploadParams = {
+    Bucket: "clockedin",
+    Key: loginImage.originalname,
+    Body: loginImage.buffer,
+  };
 
-//   const faceParams = {
-//     CollectionId: "clockedin",
-//     FaceMatchThreshold: 95,
-//     Image: {
-//       S3Object: {
-//         Bucket: "clockedin",
-//         Name: loginImage.originalname,
-//       },
-//     },
-//     MaxFaces: 1,
-//     QualityFilter: "AUTO",
-//   };
+  const faceParams = {
+    CollectionId: "clockedin",
+    FaceMatchThreshold: 95,
+    Image: {
+      S3Object: {
+        Bucket: "clockedin",
+        Name: loginImage.originalname,
+      },
+    },
+    MaxFaces: 1,
+    QualityFilter: "AUTO",
+  };
 
-//   s3.upload(uploadParams, (err, data) => {
-//     if (err) {
-//       LOG.error(req._id, err.message);
-//       return next(
-//         new HttpError("Could not log you in, please try again later", 500)
-//       );
-//     }
-//     if (data) {
-//       rekognition.searchFacesByImage(faceParams, (err, data) => {
-//         if (err) {
-//           return next(
-//             new HttpError("Could not log you in, please try again later", 500)
-//           );
-//         }
-//         if (data) {
-//           const employeeId = data.FaceMatches[0].Face.ExternalImageId;
-//           handleAutoLogin(employeeId, temperature).then((data) => {
-//             const { code, message } = data;
-//             if (code === 201) {
-//               return res.status(code).json({ message });
-//             } else {
-//               return next(new HttpError(message, code));
-//             }
-//           });
-//         }
-//       });
-//     }
-//   });
-// };
+  s3.upload(uploadParams, (err, data) => {
+    if (err) {
+      LOG.error(req._id, err.message);
+      return next(
+        new HttpError("Could not log you in, please try again later", 500)
+      );
+    }
+    if (data) {
+      rekognition.searchFacesByImage(faceParams, (err, data) => {
+        if (err) {
+          return next(
+            new HttpError("Could not log you in, please try again later", 500)
+          );
+        }
+        if (data) {
+          const employeeId = data.FaceMatches[0].Face.ExternalImageId;
+          handleAutoLogin(employeeId, temperature).then((data) => {
+            const { code, message } = data;
+            if (code === 201) {
+              return res.status(code).json({ message });
+            } else {
+              return next(new HttpError(message, code));
+            }
+          });
+        }
+      });
+    }
+  });
+};
 
 const getMonthlyHistory = async (req, res, next) => {
   const errors = validationResult(req);
@@ -308,6 +311,7 @@ module.exports = {
   clockIn,
   clockOut,
   autoClockIn,
+  autoClockInTesting,
   getMonthlyHistory,
   getDailyHistory,
 };
