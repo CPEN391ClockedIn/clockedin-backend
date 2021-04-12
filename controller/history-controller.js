@@ -133,7 +133,7 @@ const autoClockIn = async (req, res, next) => {
     const uploadParams = {
       Bucket: "clockedin",
       Key: filename,
-      Body: atob(fs.readFileSync(`image.txt`).toString()),
+      Body: Buffer.from(fs.readFileSync(`image.txt`).toString(), "base64"),
     };
 
     const faceParams = {
