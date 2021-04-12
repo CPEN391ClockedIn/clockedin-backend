@@ -150,10 +150,10 @@ const autoClockIn = async (req, res, next) => {
     };
 
     s3.upload(uploadParams, (err, data) => {
-      fs.unlinkSync(`imagePart1.txt`);
-      fs.unlinkSync(`imagePart2.txt`);
-      fs.unlinkSync(`imagePart3.txt`);
-      fs.unlinkSync(`image.txt`);
+      // fs.unlinkSync(`imagePart1.txt`);
+      // fs.unlinkSync(`imagePart2.txt`);
+      // fs.unlinkSync(`imagePart3.txt`);
+      // fs.unlinkSync(`image.txt`);
 
       if (err) {
         LOG.error(req._id, err.message);
