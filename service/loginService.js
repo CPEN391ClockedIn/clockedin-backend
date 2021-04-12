@@ -2,7 +2,7 @@ const History = require("../model/history");
 const Temperature = require("../model/temperature");
 const { formattedDate, formattedTime } = require("../utils/time");
 
-const handleAutoLogin = async (employeeId, temperature) => {
+const handleAutoLogin = async (employeeId) => {
   const date = formattedDate();
 
   /* Check if the employee has clocked in */
