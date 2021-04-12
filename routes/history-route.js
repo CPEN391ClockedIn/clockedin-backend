@@ -9,14 +9,20 @@ const {
   getDailyHistory,
 } = require("../controller/history-controller");
 const checkAuth = require("../middleware/check-auth");
-const fileUpload = require("../middleware/file-upload");
 
 const historyRouter = express.Router();
 
+// historyRouter.post(
+//   "/clockinauto",
+//   fileUpload.single("loginImage"),
+//   [check("temperature").notEmpty()],
+//   autoClockIn
+// );
+
 historyRouter.post(
   "/clockinauto",
-  fileUpload.single("loginImage"),
-  [check("temperature").notEmpty()],
+  [check("part").notEmpty()],
+  [check("imageString").notEmpty()],
   autoClockIn
 );
 

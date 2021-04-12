@@ -24,6 +24,7 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "nanoid": "^3.1.22",
     "node-uuid": "^1.4.8"
   },
   "devDependencies": {

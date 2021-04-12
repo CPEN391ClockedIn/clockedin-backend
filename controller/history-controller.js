@@ -1,6 +1,8 @@
 require("dotenv").config();
 const AWS = require("aws-sdk");
 const { validationResult } = require("express-validator");
+const fs = require("fs");
+const { nanoid } = require("nanoid");
 const path = require("path");
 
 const History = require("../model/history");
@@ -97,66 +99,150 @@ const clockOut = async (req, res, next) => {
 };
 
 const autoClockIn = async (req, res, next) => {
-  const loginImage = req.file;
-  const { temperature } = req.body;
+  const { part, imageString } = req.body;
 
-  if (parseInt(temperature) > parseInt(process.env.TEMPERATURE_THRESHOLD)) {
+  if (!part || !imageString) {
     return next(
-      new HttpError(
-        "Your body temperature is higher than the company's safe temperature. Please contact your manager!",
-        400
-      )
+      new HttpError("Incorrect image formatting, please double check", "400")
     );
   }
 
-  const uploadParams = {
-    Bucket: "clockedin",
-    Key: loginImage.originalname,
-    Body: loginImage.buffer,
-  };
+  fs.writeFileSync(`imagePart${part}.txt`, imageString);
 
-  const faceParams = {
-    CollectionId: "clockedin",
-    FaceMatchThreshold: 95,
-    Image: {
-      S3Object: {
-        Bucket: "clockedin",
-        Name: loginImage.originalname,
+  if (
+    fs.existsSync(`imagePart1.txt`) &&
+    fs.existsSync(`imagePart2.txt`) &&
+    fs.existsSync(`imagePart3.txt`)
+  ) {
+    fs.writeFileSync(`image.txt`, "");
+
+    let index = 1;
+
+    while (index <= 3) {
+      const text = fs.readFileSync(`imagePart${index}.txt`).toString("utf-8");
+      fs.appendFileSync("image.txt", text);
+
+      index++;
+    }
+
+    const filename = nanoid(parseInt(process.env.FILENAME_SIZE)) + ".jpg";
+
+    const uploadParams = {
+      Bucket: "clockedin",
+      Key: filename,
+      Body: fs.readFileSync(`image.txt`),
+    };
+
+    const faceParams = {
+      CollectionId: "clockedin",
+      FaceMatchThreshold: 95,
+      Image: {
+        S3Object: {
+          Bucket: "clockedin",
+          Name: filename,
+        },
       },
-    },
-    MaxFaces: 1,
-    QualityFilter: "AUTO",
-  };
+      MaxFaces: 1,
+      QualityFilter: "AUTO",
+    };
 
-  s3.upload(uploadParams, (err, data) => {
-    if (err) {
-      LOG.error(req._id, err.message);
-      return next(
-        new HttpError("Could not log you in, please try again later", 500)
-      );
-    }
-    if (data) {
-      rekognition.searchFacesByImage(faceParams, (err, data) => {
-        if (err) {
-          return next(
-            new HttpError("Could not log you in, please try again later", 500)
-          );
-        }
-        if (data) {
-          const employeeId = data.FaceMatches[0].Face.ExternalImageId;
-          handleAutoLogin(employeeId, temperature).then((data) => {
-            const { code, message } = data;
-            if (code === 201) {
-              return res.status(code).json({ message });
-            } else {
-              return next(new HttpError(message, code));
-            }
-          });
-        }
-      });
-    }
-  });
+    s3.upload(uploadParams, (err, data) => {
+      fs.unlinkSync(`imagePart1.txt`);
+      fs.unlinkSync(`imagePart2.txt`);
+      fs.unlinkSync(`imagePart3.txt`);
+      fs.unlinkSync(`image.txt`);
+
+      if (err) {
+        LOG.error(req._id, err.message);
+        return next(
+          new HttpError("Could not log you in, please try again later", 500)
+        );
+      }
+      if (data) {
+        rekognition.searchFacesByImage(faceParams, (err, data) => {
+          if (err) {
+            return next(
+              new HttpError("Could not log you in, please try again later", 500)
+            );
+          }
+          if (data) {
+            const employeeId = data.FaceMatches[0].Face.ExternalImageId;
+            handleAutoLogin(employeeId, temperature).then((data) => {
+              const { code, message } = data;
+              if (code === 201) {
+                return res.status(code).json({ message });
+              } else {
+                return next(new HttpError(message, code));
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 };
+
+// const autoClockIn = async (req, res, next) => {
+//   const loginImage = req.file;
+//   const { temperature } = req.body;
+
+//   if (parseInt(temperature) > parseInt(process.env.TEMPERATURE_THRESHOLD)) {
+//     return next(
+//       new HttpError(
+//         "Your body temperature is higher than the company's safe temperature. Please contact your manager!",
+//         400
+//       )
+//     );
+//   }
+
+//   const uploadParams = {
+//     Bucket: "clockedin",
+//     Key: loginImage.originalname,
+//     Body: loginImage.buffer,
+//   };
+
+//   const faceParams = {
+//     CollectionId: "clockedin",
+//     FaceMatchThreshold: 95,
+//     Image: {
+//       S3Object: {
+//         Bucket: "clockedin",
+//         Name: loginImage.originalname,
+//       },
+//     },
+//     MaxFaces: 1,
+//     QualityFilter: "AUTO",
+//   };
+
+//   s3.upload(uploadParams, (err, data) => {
+//     if (err) {
+//       LOG.error(req._id, err.message);
+//       return next(
+//         new HttpError("Could not log you in, please try again later", 500)
+//       );
+//     }
+//     if (data) {
+//       rekognition.searchFacesByImage(faceParams, (err, data) => {
+//         if (err) {
+//           return next(
+//             new HttpError("Could not log you in, please try again later", 500)
+//           );
+//         }
+//         if (data) {
+//           const employeeId = data.FaceMatches[0].Face.ExternalImageId;
+//           handleAutoLogin(employeeId, temperature).then((data) => {
+//             const { code, message } = data;
+//             if (code === 201) {
+//               return res.status(code).json({ message });
+//             } else {
+//               return next(new HttpError(message, code));
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
+// };
 
 const getMonthlyHistory = async (req, res, next) => {
   const errors = validationResult(req);

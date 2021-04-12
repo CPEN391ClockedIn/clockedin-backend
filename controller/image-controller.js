@@ -65,8 +65,6 @@ const uploadImage = async (req, res, next) => {
 const imageTest = async (req, res, next) => {
   const { part, testImageString } = req.body;
 
-  console.log(part, testImageString);
-
   fs.writeFileSync(`imagePart${part}.txt`, testImageString);
 
   if (
