@@ -63,18 +63,22 @@ const uploadImage = async (req, res, next) => {
 
 /* Testing Purpose Only */
 const imageTest = async (req, res, next) => {
-  const { part, testImageString, end } = req.body;
+  const { part, testImageString } = req.body;
 
-  console.log(part, testImageString, end);
+  console.log(part, testImageString);
 
   fs.writeFileSync(`imagePart${part}.txt`, testImageString);
 
-  if (end) {
+  if (
+    fs.existsSync(`imagePart1.txt`) &&
+    fs.existsSync(`imagePart2.txt`) &&
+    fs.existsSync(`imagePart3.txt`)
+  ) {
     fs.writeFileSync(`image.txt`, "");
 
     let index = 1;
 
-    while (fs.existsSync(`imagePart${index}.txt`)) {
+    while (index <= 3) {
       const text = fs.readFileSync(`imagePart${index}.txt`).toString("utf-8");
       fs.appendFileSync("image.txt", text);
 
