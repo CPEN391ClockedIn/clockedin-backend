@@ -190,7 +190,7 @@ const autoClockIn = async (req, res, next) => {
       }
     });
   } else {
-    return res.status(code).json({ success: "image success" });
+    return res.status(201).json({ success: "image success" });
   }
 };
 
