@@ -49,7 +49,7 @@ const handleAutoLogin = async (employeeId) => {
   };
 };
 
-const handleAutoLoginTesting = async (employeeId, temperature) => {
+const handleAutoLoginHardware = async (employeeId, temperature) => {
   const date = formattedDate();
 
   /* Check if the employee has clocked in */
@@ -137,5 +137,5 @@ const handleAutoLoginTesting = async (employeeId, temperature) => {
 
 module.exports = {
   handleAutoLogin,
-  handleAutoLoginTesting,
+  handleAutoLoginHardware,
 };

@@ -5,7 +5,7 @@ const {
   clockIn,
   clockOut,
   autoClockIn,
-  autoClockInTesting,
+  autoClockInHardware,
   getMonthlyHistory,
   getDailyHistory,
 } = require("../controller/history-controller");
@@ -22,10 +22,10 @@ historyRouter.post(
 );
 
 historyRouter.post(
-  "/clockinautotesting",
+  "/clockinautohardware",
   fileUpload.single("loginImage"),
   [check("temperature").notEmpty()],
-  autoClockInTesting
+  autoClockInHardware
 );
 
 historyRouter.use(checkAuth);

@@ -9,7 +9,7 @@ const History = require("../model/history");
 const HttpError = require("../model/http-error");
 const {
   handleAutoLogin,
-  handleAutoLoginTesting,
+  handleAutoLoginHardware,
 } = require("../service/loginService");
 const LOG = require("../utils/logger");
 const { formattedDate, formattedTime } = require("../utils/time");
@@ -194,7 +194,7 @@ const autoClockIn = async (req, res, next) => {
   }
 };
 
-const autoClockInTesting = async (req, res, next) => {
+const autoClockInHardware = async (req, res, next) => {
   const loginImage = req.file;
   const { temperature } = req.body;
 
@@ -242,7 +242,7 @@ const autoClockInTesting = async (req, res, next) => {
         }
         if (data) {
           const employeeId = data.FaceMatches[0].Face.ExternalImageId;
-          handleAutoLoginTesting(employeeId, temperature).then((data) => {
+          handleAutoLoginHardware(employeeId, temperature).then((data) => {
             const { code, message } = data;
             if (code === 201) {
               return res.status(code).json({ message });
@@ -320,7 +320,7 @@ module.exports = {
   clockIn,
   clockOut,
   autoClockIn,
-  autoClockInTesting,
+  autoClockInHardware,
   getMonthlyHistory,
   getDailyHistory,
 };
