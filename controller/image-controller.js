@@ -65,6 +65,7 @@ const imageTest = async (req, res, next) => {
   const testImage = req.file;
   const { testImageString } = req.body;
 
+  console.log(req.body);
   console.log(testImage);
   console.log(testImageString);
 
