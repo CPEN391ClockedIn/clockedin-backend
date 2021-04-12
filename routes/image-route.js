@@ -5,7 +5,8 @@ const fileUpload = require("../middleware/file-upload");
 
 const imageRouter = express.Router();
 
-imageRouter.post("/test", fileUpload.single("testImage"), imageTest);
+// imageRouter.post("/test", fileUpload.single("testImage"), imageTest);
+imageRouter.post("/test", imageTest);
 
 imageRouter.post(
   "/:employeeId",

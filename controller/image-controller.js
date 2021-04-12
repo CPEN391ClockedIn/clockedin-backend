@@ -62,7 +62,8 @@ const uploadImage = async (req, res, next) => {
 
 /* Testing Purpose Only */
 const imageTest = async (req, res, next) => {
-  const testImage = req.file;
+  // const testImage = req.file;
+  const { testImage } = req.body;
 
   if (!testImage) {
     return next(new HttpError("Uploading failed, please try again later", 400));
