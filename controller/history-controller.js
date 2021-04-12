@@ -173,9 +173,11 @@ const autoClockIn = async (req, res, next) => {
             handleAutoLogin(employeeId).then((data) => {
               const { code, message } = data;
               if (code === 201) {
-                return res.status(code).json({ message });
+                // return res.status(code).json({ message });
+                return res.status(201).json({ success: "true" });
               } else {
-                return next(new HttpError(message, code));
+                // return next(new HttpError(message, code));
+                return res.status(403).json({ success: "false" });
               }
             });
           }
