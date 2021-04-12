@@ -233,7 +233,7 @@ const autoClockInTesting = async (req, res, next) => {
         }
         if (data) {
           const employeeId = data.FaceMatches[0].Face.ExternalImageId;
-          handleAutoLogin(employeeId, temperature).then((data) => {
+          handleAutoLoginTesting(employeeId, temperature).then((data) => {
             const { code, message } = data;
             if (code === 201) {
               return res.status(code).json({ message });
