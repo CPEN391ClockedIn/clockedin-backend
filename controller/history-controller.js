@@ -150,10 +150,15 @@ const autoClockIn = async (req, res, next) => {
     };
 
     s3.upload(uploadParams, (err, data) => {
-      // fs.unlinkSync(`imagePart1.txt`);
-      // fs.unlinkSync(`imagePart2.txt`);
-      // fs.unlinkSync(`imagePart3.txt`);
-      // fs.unlinkSync(`image.txt`);
+      if (fs.existsSync(`imagePart1.txt`)) {
+        fs.unlinkSync(`imagePart1.txt`);
+      }
+      if (fs.existsSync(`imagePart2.txt`)) {
+        fs.unlinkSync(`imagePart2.txt`);
+      }
+      if (fs.existsSync(`imagePart3.txt`)) {
+        fs.unlinkSync(`imagePart3.txt`);
+      }
 
       if (err) {
         LOG.error(req._id, err.message);
@@ -173,11 +178,9 @@ const autoClockIn = async (req, res, next) => {
             handleAutoLogin(employeeId).then((data) => {
               const { code, message } = data;
               if (code === 201) {
-                // return res.status(code).json({ message });
-                return res.status(201).json({ success: "true" });
+                return res.status(code).json({ message });
               } else {
-                // return next(new HttpError(message, code));
-                return res.status(403).json({ success: "false" });
+                return next(new HttpError(message, code));
               }
             });
           }
